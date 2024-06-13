@@ -1,5 +1,7 @@
 package com.logs.parser.service;
 
+import com.logs.parser.exceptions.LogFileDoesNotExistException;
+import com.logs.parser.exceptions.WhiteSpaceNotAllowedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
@@ -27,11 +29,15 @@ public class LoggerService {
     {
         try {
             File logFile = new File(filePath);
-            if(!logFile.exists() || !logFile.isFile()) return false;
+            if(!logFile.exists() || !logFile.isFile())
+                return false;
             ProcessLogFile(logFile);
             return true;
         }
-        catch (Exception ex) { return false; }
+        catch (Exception ex)
+        {
+            return false;
+        }
     }
 
     public String DisplayFile()
@@ -79,13 +85,12 @@ public class LoggerService {
         addInFileData(LogData);
     }
 
-    public List<TreeMap<String, String>> GetAllLogData()
-    {
+    public List<TreeMap<String, String>> GetAllLogData() throws LogFileDoesNotExistException {
         return getFileData();
     }
 
-    public List<TreeMap<String, String>> ChangeColumn(String existingColumn, String newColumn)
-    {
+    public List<TreeMap<String, String>> ChangeColumn(String existingColumn, String newColumn) throws WhiteSpaceNotAllowedException, LogFileDoesNotExistException {
+        if (newColumn.contains(" ")) throw new WhiteSpaceNotAllowedException();
         for (TreeMap<String,String> log:
              getFileData()) {
             if(log.containsKey(existingColumn))

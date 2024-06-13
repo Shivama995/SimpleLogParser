@@ -1,5 +1,6 @@
 package com.logs.parser.runtimeConfig;
 
+import com.logs.parser.exceptions.LogFileDoesNotExistException;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -23,7 +24,8 @@ public class RuntimeContext {
         RuntimeContext.file = file;
     }
 
-    public static List<TreeMap<String, String>> getFileData() {
+    public static List<TreeMap<String, String>> getFileData() throws LogFileDoesNotExistException {
+        if(fileData == null || fileData.isEmpty()) throw new LogFileDoesNotExistException();
         return fileData;
     }
 
